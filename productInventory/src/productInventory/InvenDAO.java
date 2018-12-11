@@ -14,20 +14,21 @@ public class InvenDAO {
 	public void insertProd(InvenVO vo) {
 		conn = DBConnection.getConnection();
 		CallableStatement cs;
-		
+
 		try {
-			cs = conn.prepareCall("{call INSERT_PROD(?,?,?,?,?)}");
-			
-			System.out.println("재고입력");
-			cs.setString(1, vo.getProd_inven());
-			cs.setString(2, vo.getProd_inven_loc());
-			cs.setInt(3, vo.getProd_code());
-			cs.setInt(4, vo.getProd_stored());
-			cs.setString(5, vo.getProd_name());
-			
-			
+			cs = conn.prepareCall("{call INSERT_PROD(?,?,?,?)}");
+
+			System.out.println("상품정보입력");
+
+			cs.setInt(1, vo.getProd_code());
+			cs.setString(2, vo.getProd_name());
+			cs.setInt(3, vo.getProd_price());
+			cs.registerOutParameter(4, java.sql.Types.VARCHAR);
 			cs.execute();
-			System.out.println("Successfully Loaded Procesure");
+			if (cs.getString(4).equals("Success"))
+				System.out.println("Successfully Loaded Procesure");
+			else
+				System.out.println("Already exist");
 			cs.close();
 			conn.close();
 		} catch (SQLException e) {
@@ -36,24 +37,30 @@ public class InvenDAO {
 		}
 	}
 
-	public void selectProd() {
+	public void selectProd(int prod_code) {
 		conn = DBConnection.getConnection();
-		String sql = "select * from prod_info";
+		String sql;
+		if (prod_code == 0)
+			sql = "select * from prod_info";
+		else
+			sql = "select * from prod_info where prod_code = ? ";
 		try {
 			pstmt = conn.prepareStatement(sql);
+			if (prod_code != 0)
+				pstmt.setInt(1, prod_code);
 			rs = pstmt.executeQuery();
-			InvenVO emp = null;
+			InvenVO vo = null;
 			System.out.println("--------------------------------------");
 
 			if (rs.next()) {
 				do {
 
-					emp = new InvenVO();
-					emp.setProd_name(rs.getString("prod_name"));
-					emp.setProd_code(rs.getInt("prod_code"));
-					emp.setProd_price(rs.getInt("prod_price"));
+					vo = new InvenVO();
+					vo.setProd_code(rs.getInt("prod_code"));
+					vo.setProd_name(rs.getString("prod_name"));
+					vo.setProd_price(rs.getInt("prod_price"));
 
-					System.out.println(emp.toString());
+					System.out.println(vo.toString());
 				} while (rs.next());
 			}
 			System.out.println("--------------------------------------");
@@ -63,21 +70,75 @@ public class InvenDAO {
 		}
 	}
 
-	public void updateProd(InvenVO vo) {
+	public void updateSr(InvenVO vo) {
 		conn = DBConnection.getConnection();
-		String sql = "update prod_inven_info set prod_code = ? where prod_inven=? ";
-		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, vo.getProd_code());
-			pstmt.setString(2, vo.getProd_inven());
+		CallableStatement cs;
 
-			int r = pstmt.executeUpdate();
-			System.out.println(r + "건이 수정되었습니다.");
+		try {
+			cs = conn.prepareCall("{call UPDATE_PROD(?,?,?,?,?)}");
+
+			cs.setInt(1, vo.getProd_code());
+			cs.setString(2, vo.getInven_name());
+			cs.setInt(3, vo.getProd_in());
+			cs.setInt(4, vo.getProd_out());
+			cs.registerOutParameter(5, java.sql.Types.VARCHAR);
+
+			cs.execute();
+			System.out.println("재고가 변경이 되었습니다.");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
+	}
+
+	public void phead() {
+		conn = DBConnection.getConnection();
+		CallableStatement cs;
+
+		try {
+			cs = conn.prepareCall("{ ? = call create_puchase_no()}");
+
+			int r = cs.executeUpdate();
+			System.out.println(r + "재고가 변경이 되었습니다.");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void selectInven(int prod_code) {
+		conn = DBConnection.getConnection();
+		InvenVO vo = null;
+		vo = new InvenVO();
+		String sql;
+		if (prod_code == 0)
+			sql = "select * from prod_inven";
+		else
+			sql = "select * from prod_inven where prod_code = ? ";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			if (prod_code != 0)
+				pstmt.setInt(1, prod_code);
+			rs = pstmt.executeQuery();
+
+			System.out.println("--------------------------------------");
+
+			if (rs.next()) {
+				do {
+
+					vo.getProd_code();
+					vo.getInven_name();
+					vo.getProd_sum();
+
+					System.out.println(vo.toString());
+				} while (rs.next());
+			}
+			System.out.println("--------------------------------------");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -1,20 +1,8 @@
 package productInventory;
 
 public class InvenVO {
-	String prod_name;
-	int prod_code;
-	int prod_price;
-	int prod_stored;
-	int prod_released;
-	String prod_inven;
-	String prod_inven_loc;
-	
-	public String getProd_name() {
-		return prod_name;
-	}
-	public void setProd_name(String prod_name) {
-		this.prod_name = prod_name;
-	}
+	int prod_code, prod_price, prod_in, prod_out, prod_sum;
+	String prod_name, inven_name;
 	public int getProd_code() {
 		return prod_code;
 	}
@@ -27,34 +15,41 @@ public class InvenVO {
 	public void setProd_price(int prod_price) {
 		this.prod_price = prod_price;
 	}
-	public int getProd_stored() {
-		return prod_stored;
+	public int getProd_in() {
+		return prod_in;
 	}
-	public void setProd_stored(int prod_stored) {
-		this.prod_stored = prod_stored;
+	public void setProd_in(int prod_in) {
+		this.prod_in = prod_in;
 	}
-	public int getProd_released() {
-		return prod_released;
+	public int getProd_out() {
+		return prod_out;
 	}
-	public void setProd_released(int prod_released) {
-		this.prod_released = prod_released;
+	public void setProd_out(int prod_out) {
+		this.prod_out = prod_out;
 	}
-	public String getProd_inven() {
-		return prod_inven;
+	public int getProd_sum() {
+		return prod_sum;
 	}
-	public void setProd_inven(String prod_inven) {
-		this.prod_inven = prod_inven;
+	public void setProd_sum(int prod_sum) {
+		this.prod_sum = prod_sum;
 	}
-	public String getProd_inven_loc() {
-		return prod_inven_loc;
+	public String getProd_name() {
+		return prod_name;
 	}
-	public void setProd_inven_loc(String prod_inven_loc) {
-		this.prod_inven_loc = prod_inven_loc;
+	public void setProd_name(String prod_name) {
+		this.prod_name = prod_name;
+	}
+	public String getInven_name() {
+		return inven_name;
+	}
+	public void setInven_name(String inven_name) {
+		this.inven_name = inven_name;
 	}
 	@Override
 	public String toString() {
-		return "invenVo [prod_name=" + prod_name + ", prod_code=" + prod_code + ", prod_price=" + prod_price
-				+ ", prod_stored=" + prod_stored + ", prod_released=" + prod_released + ", prod_inven=" + prod_inven
-				+ ", prod_inven_loc=" + prod_inven_loc + "]";
+		return "InvenVO [prod_code=" + prod_code + ", prod_price=" + prod_price + ", prod_in=" + prod_in + ", prod_out="
+				+ prod_out + ", prod_sum=" + prod_sum + ", prod_name=" + prod_name + ", inven_name=" + inven_name + "]";
 	}
+	
+	
 }
