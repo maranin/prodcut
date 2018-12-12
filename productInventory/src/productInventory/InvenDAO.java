@@ -13,24 +13,19 @@ public class InvenDAO {
 
 	public void insertProd(InvenVO vo) {
 		conn = DBConnection.getConnection();
-		CallableStatement cs;
+		PreparedStatement cs;
 
 		try {
-			cs = conn.prepareCall("{call INSERT_PROD(?,?,?,?)}");
+			cs = conn.prepareStatement("insert into prod_info values (?,?,?)");
 
-			System.out.println("상품정보입력");
+			System.out.println("입력확인");
 
 			cs.setInt(1, vo.getProd_code());
 			cs.setString(2, vo.getProd_name());
 			cs.setInt(3, vo.getProd_price());
-			cs.registerOutParameter(4, java.sql.Types.VARCHAR);
-			cs.execute();
-			if (cs.getString(4).equals("Success"))
-				System.out.println("Successfully Loaded Procesure");
-			else
-				System.out.println("Already exist");
-			cs.close();
-			conn.close();
+			cs.executeQuery();
+//			cs.close();
+//			conn.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,8 +54,7 @@ public class InvenDAO {
 					vo.setProd_code(rs.getInt("prod_code"));
 					vo.setProd_name(rs.getString("prod_name"));
 					vo.setProd_price(rs.getInt("prod_price"));
-
-					System.out.println(vo.toString());
+					System.out.println(vo.getProd_code() + "\t" + vo.getProd_name() + "\t" + vo.getProd_price());
 				} while (rs.next());
 			}
 			System.out.println("--------------------------------------");
@@ -75,14 +69,13 @@ public class InvenDAO {
 		CallableStatement cs;
 
 		try {
-			cs = conn.prepareCall("{call UPDATE_PROD(?,?,?,?,?)}");
+			cs = conn.prepareCall("{call UPDATE_PROD(?,?,?,?)}");
 
 			cs.setInt(1, vo.getProd_code());
 			cs.setString(2, vo.getInven_name());
+			System.out.println(vo.getInven_name());
 			cs.setInt(3, vo.getProd_in());
 			cs.setInt(4, vo.getProd_out());
-			cs.registerOutParameter(5, java.sql.Types.VARCHAR);
-
 			cs.execute();
 			System.out.println("재고가 변경이 되었습니다.");
 		} catch (SQLException e) {
@@ -92,15 +85,19 @@ public class InvenDAO {
 
 	}
 
-	public void phead() {
+	public void phead(InvenVO vo) {
 		conn = DBConnection.getConnection();
 		CallableStatement cs;
 
 		try {
-			cs = conn.prepareCall("{ ? = call create_puchase_no()}");
-
-			int r = cs.executeUpdate();
-			System.out.println(r + "재고가 변경이 되었습니다.");
+			cs = conn.prepareCall("{ ? = call create_purchase_no()}");
+			
+			cs.registerOutParameter(1, java.sql.Types.VARCHAR); 
+			cs.execute();
+//			cs.registerOutParameter(3, java.sql.Types.INTEGER);
+			System.out.println(cs.getString(1));
+			
+//			System.out.println(r + "구매번호 생성되었습니다.");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -127,11 +124,10 @@ public class InvenDAO {
 			if (rs.next()) {
 				do {
 
-					vo.getProd_code();
-					vo.getInven_name();
-					vo.getProd_sum();
+					System.out.print(rs.getInt("prod_code")+ "\t");
+					System.out.print(rs.getString("inven_name")+ "\t");
+					System.out.println(rs.getInt("prod_sum"));
 
-					System.out.println(vo.toString());
 				} while (rs.next());
 			}
 			System.out.println("--------------------------------------");
@@ -141,4 +137,47 @@ public class InvenDAO {
 		}
 	}
 
+	public void purchaseHead (InvenVO vo) {
+		conn = DBConnection.getConnection();
+		CallableStatement cs;
+		String sql = ("insert into head_info values (?,sysdate,?)");
+		try {
+			cs = conn.prepareCall("{ ? = call create_purchase_no()}");
+			cs.registerOutParameter(1, java.sql.Types.VARCHAR); 
+			cs.execute();
+			System.out.println(cs.getString(1));
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cs.getString(1));
+			pstmt.setString(2, vo.getBuyer());
+			pstmt.executeUpdate();
+			
+			vo.setPid(cs.getString(1));
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void purchaseLine(InvenVO vo) {
+		conn = DBConnection.getConnection();
+		CallableStatement cs;
+		String sql = ("insert into headline values (?,?,?,?)");
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, vo.getPid());
+			pstmt.setString(2, vo.getProd_name());
+			pstmt.setInt(3, vo.getProd_code());
+			pstmt.setInt(4, vo.getQty());
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

@@ -1,8 +1,8 @@
 package productInventory;
 
 public class InvenVO {
-	int prod_code, prod_price, prod_in, prod_out, prod_sum;
-	String prod_name, inven_name;
+	int prod_code, prod_price, prod_in, prod_out, prod_sum, qty;
+	String prod_name, inven_name, pid, buyer, pdate;
 	public int getProd_code() {
 		return prod_code;
 	}
@@ -33,6 +33,12 @@ public class InvenVO {
 	public void setProd_sum(int prod_sum) {
 		this.prod_sum = prod_sum;
 	}
+	public int getQty() {
+		return qty;
+	}
+	public void setQty(int qty) {
+		this.qty = qty;
+	}
 	public String getProd_name() {
 		return prod_name;
 	}
@@ -45,11 +51,29 @@ public class InvenVO {
 	public void setInven_name(String inven_name) {
 		this.inven_name = inven_name;
 	}
-	@Override
-	public String toString() {
-		return "InvenVO [prod_code=" + prod_code + ", prod_price=" + prod_price + ", prod_in=" + prod_in + ", prod_out="
-				+ prod_out + ", prod_sum=" + prod_sum + ", prod_name=" + prod_name + ", inven_name=" + inven_name + "]";
+	public String getPid() {
+		return pid;
 	}
-	
-	
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+	public String getBuyer() {
+		return buyer;
+	}
+	public void setBuyer(String buyer) {
+		this.buyer = buyer;
+	}
+	public String getPdate() {
+		return pdate;
+	}
+	public void setPdate(String pdate) {
+		this.pdate = pdate;
+	}
+//	@Override
+//	public String toString() {
+//		return "InvenVO [prod_code=" + prod_code + ", prod_price=" + prod_price + ", prod_in=" + prod_in + ", prod_out="
+//				+ prod_out + ", prod_sum=" + prod_sum + ", qty=" + qty + ", prod_name=" + prod_name + ", inven_name="
+//				+ inven_name + ", pid=" + pid + ", buyer=" + buyer + ", pdate=" + pdate + "]";
+//	}
+
 }

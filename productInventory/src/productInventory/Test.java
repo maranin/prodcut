@@ -12,12 +12,12 @@ public class Test {
 		int selNum;
 		boolean t = true;
 		do {
-			System.out.println("1. 상품   입력");
-			System.out.println("2. 상품   조회");
-			System.out.println("3. 입출고처리");
-			System.out.println("4. 재고   조회");
-			System.out.println("5. 판매   정보");
-			System.out.println("6. 종         료");
+			System.out.println("1. 상품     입력");
+			System.out.println("2. 상품     조회");
+			System.out.println("3. 입출 고 처리");
+			System.out.println("4. 재고     조회");
+			System.out.println("5. 판매ID생성");
+			System.out.println("6. 주문입력받기");
 
 			System.out.println("============");
 			System.out.println("메    뉴    선    택");
@@ -30,11 +30,11 @@ public class Test {
 				String pname;
 
 				System.out.println("상품코드: ");
-				vo.setProd_code(pcode = sc.nextInt());
+				vo.setProd_code(sc.nextInt());
 				System.out.println("상품이름: ");
-				vo.setProd_name(pname = sc.next());
+				vo.setProd_name(sc.next());
 				System.out.println("상품가격: ");
-				vo.setProd_price(pprice = sc.nextInt());
+				vo.setProd_price(sc.nextInt());
 
 				dao.insertProd(vo);
 				System.out.println("입력 확인");
@@ -47,11 +47,11 @@ public class Test {
 
 				break;
 			case 3:
-				
+
 				System.out.println("상품 코드를 입력하세요.");
 				vo.setProd_code(sc.nextInt());
-				System.out.println("상품 이름을 입력하세요.");
-				vo.setProd_name(sc.next());
+				System.out.println("창고를 입력하세요.");
+				vo.setInven_name(sc.next());
 				System.out.println("상품 수량을 입력하세요.");
 				vo.setProd_in(sc.nextInt());
 				dao.updateSr(vo);
@@ -62,13 +62,28 @@ public class Test {
 				dao.selectInven(vo.getProd_code());
 				break;
 			case 5:
-				dao.phead();
+				System.out.println("PID를 입력하세요.");
+				dao.phead(vo);
 				break;
-//		         case 6:
-//		            //재고 조회
-//		            break;
+			case 6:
+				String stop;
+				System.out.println("이름을 입력하세요.");
+				vo.setBuyer(sc.next());
+				dao.purchaseHead(vo);
+				do {
+					System.out.println("상품코드를 입력하세요");
+					vo.setPid(sc.next());
+					System.out.println("수량을 입력하세요");
+					vo.setQty(sc.nextInt());
+					dao.purchaseLine(vo);
+					System.out.println("종료는 q를 입력하세요");
+					stop = sc.next();
+					if(stop.equals("q")) 
+						break;
+				} while (true);
+
 			case 7:
-				System.out.println("이용해주셔서 감사합니다.");
+				System.out.println("상품");
 				t = false;
 			default:
 				break;
